@@ -80,7 +80,7 @@
 				{
 					"name": "SROM",
 					"id": 3,
-					"required": true,
+					"required": false,
 					"parameters": 0,
 					"extensions": [
 						"srom"
@@ -129,7 +129,7 @@
 				{
 					"name": "VROM",
 					"id": 7,
-					"required": true,
+					"required": false,
 					"parameters": 0,
 					"extensions": [
 						"vbin", "vroma0"

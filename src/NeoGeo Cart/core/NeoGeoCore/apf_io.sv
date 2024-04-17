@@ -170,6 +170,8 @@ module apf_io
 	
 	output reg [3:0] 	cart_pchip,
 	output reg       	use_pcm,
+	output reg       	ms5p_bank,
+	output reg       	xram,
 	output reg [1:0] 	cart_chip,
 	output reg [1:0] 	cmc_chip,
 
@@ -590,7 +592,7 @@ reg [9:0] test_crom_bits; //= { // this is a trick Im doing to check if anything
 			endcase
 		end
 									
-reg 			cart_pchip_main;
+reg 		cart_pchip_main;
 reg [2:0] 	cart_pchip_sub;
 reg			PROM1_access;	
 reg			Core_reset;
@@ -614,10 +616,12 @@ always @(posedge clk_74a or negedge reset_l_main) begin
 		video_mode 			 	<= 32'h00000000;
 		ch_enable			 	<= 32'h000000ff;
 		snd_enable			 	<= 32'h000000ff;
-		cart_pchip_main	 	<= 32'h00000000;
+		cart_pchip_main	 	    <= 32'h00000000;
+		ms5p_bank				<= 32'h00000000;
+		xram				    <= 32'h00000000;
 		use_pcm				 	<= 32'h00000000;
 		cart_pchip_sub		 	<= 32'h00000000;
-		cmc_chip				 	<= 32'h00000000;
+		cmc_chip				<= 32'h00000000;
 		screen_x_pos		 	<= 32'h00000000;
 		screen_y_pos		 	<= 32'h00000000;
 		V2_offset			 	<= 32'h00000000;
@@ -677,6 +681,8 @@ always @(posedge clk_74a or negedge reset_l_main) begin
 				32'hF000004C : V2ROM_MASK				<= bridge_wr_data;
 				32'hF0000050 : V1ROM_MASK				<= bridge_wr_data;
 				32'hF0000054 : C1_wait					<= bridge_wr_data;
+				32'hF0000058 : ms5p_bank				<= bridge_wr_data;
+				32'hF000006C : xram				        <= bridge_wr_data;
 				
 				// Core changes
 				32'hF0000100 : Core_reset				<= bridge_wr_data;
@@ -795,7 +801,8 @@ always @(posedge clk_74a) begin
 				16'h004C : Neogeo_status <= V2ROM_MASK;
 				16'h0050 : Neogeo_status <= V1ROM_MASK;
 				16'h0054 : Neogeo_status <= C1_wait;
-
+                16'h0058 : Neogeo_status <= ms5p_bank;
+				16'h006C : Neogeo_status <= xram;
 				
 				// Core changes
 				16'h0100 : Neogeo_status <= Core_reset;
